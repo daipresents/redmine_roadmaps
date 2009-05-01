@@ -1,0 +1,75 @@
+<h2><%=  l(:roadmaps_name) %></h2>
+
+<div id="roadmap">
+
+  <% @results.each do |vo| %>
+    <h3 class="icon22 icon22-package">
+      <%= link_to vo.name, {:controller => 'versions', :action => 'show', :id => vo.version_id} %>
+    </h3>
+    
+    <table class="progress" style="width: 40em;">
+      <tr>
+        <% if vo.finish_percentage == 0 &&  vo.unfinish_percentage == 0 %>
+          <td class="todo" style="width: 100%;"></td>
+        <% elsif vo.unfinish_percentage == 100 %>
+          <td class="todo" style="width:100%;"></td>
+        <% elsif vo.unfinish_percentage == 100 %>
+          <td class="closed" style="width:100%;"></td>
+        <% else %>
+          <td class="closed" style="width: <%=vo.finish_percentage%>%;"></td>
+          <td class="todo" style="width:<%=vo.unfinish_percentage%>%;"></td>
+        <% end %>
+      </tr>
+    </table>
+    <p class="pourcent"><%= vo.finish_percentage %>%</p>
+
+    <p><%= vo.description %></p>
+    <p>
+      <a href="/projects/<%= vo.project_identifier %>/issues?fixed_version_id=<%= vo.id %>&amp;set_filter=1&amp;status_id=c"><%= vo.finish_num %></a>
+      <%= l(:finished) %>(<%= vo.finish_percentage %>%),&#160;
+      <a href="/projects/<%= vo.project_identifier %>/issues?fixed_version_id=<%= vo.id %>&amp;set_filter=1&amp;status_id=o"><%= vo.unfinish_num %></a>
+      <%= l(:unfinished) %>(<%= vo.unfinish_percentage %>%),&#160;
+      <%= l(:estimated_hours) %>:<span class="hours hours-int"><%= vo.estimated_hours %></span> <%= l(:hours) %>,&#160;
+      <%
+        hours_string = vo.passed_hours
+        if vo.estimated_hours <= vo.passed_hours
+          hours_string = "<strong style=\"color:red;\">#{vo.passed_hours}</strong>"
+        end
+      %>
+      <%= l(:passed_hours) %>:<%=hours_string%> <%= l(:hours) %>
+    </p>
+    <p>
+      <%
+        date_string = ""
+        if vo.start_date == nil && vo.due_date == nil
+          date_string = l(:no_date)
+        elsif vo.start_date == nil
+          date_string = "<strong style=\"color:red;\">#{l(:no_start_date)}</strong>~#{vo.due_date.to_s}"
+        elsif vo.due_date == nil
+          date_string =  "#{vo.start_date.to_s}~<strong style=\"color:red;\">#{l(:no_due_date)}</strong>"
+        else
+          date_string = "#{vo.start_date.to_s}~#{vo.due_date.to_s}"
+        end
+      %>
+      <%=l(:actual_date)%>:<%=date_string%>,&#160;
+      <%
+        late_string = l(:days_to_go, vo.late)
+        if vo.late < 0
+          late_string = "<strong style=\"color:red;\">#{l(:late, vo.late.abs)}</strong>"
+        end
+      %>
+      <%=late_string%>,&#160;
+     <%
+        effective_date_string = ""
+        if vo.effective_date == nil
+          effective_date_string = "<strong style=\"color:red;\">#{l(:no_version_effective_date)}</strong>"
+        elsif vo.effective_date < Date::today
+         effective_date_string = "<strong style=\"color:red;\">#{vo.effective_date.to_s}</strong>"
+        else
+          effective_date_string = vo.effective_date.to_s
+        end
+      %>
+      <%=l(:version_effective_date)%>:<%=effective_date_string%>
+    </p>
+  <% end %>
+</div>

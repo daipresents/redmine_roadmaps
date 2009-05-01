@@ -1,0 +1,16 @@
+# English strings go here
+roadmaps_name: "Roadmaps"
+late: "%d days late"
+days_to_go: "%d days to go"
+version_effective_date: "version's effective date"
+finished: "finished"
+unfinished: "unfinished"
+estimated_hours: "Estimated Hours"
+passed_hours: "Hours"
+hours: "hours"
+actual_date: "actual date"
+
+no_start_date: "start date is not setting"
+no_due_date: "due date is not setting"
+no_date: "start date and due date are not setting"
+no_version_effective_date: "version effective date is not setting"

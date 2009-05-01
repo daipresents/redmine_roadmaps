@@ -1,0 +1,16 @@
+# English strings go here
+roadmaps_name: "ロードマップス"
+late: "%d日遅れ"
+days_to_go: "残り%d日"
+version_effective_date: "バージョンの期限日"
+finished: "終了"
+unfinished: "未完了"
+estimated_hours: "予定工数"
+passed_hours: "経過時間"
+hours: "時間"
+actual_date: "実績"
+
+no_start_date: "開始日が設定されていません"
+no_due_date: "期限日が設定されていません"
+no_date: "開始日、期限日が設定されていません"
+no_version_effective_date: "バージョンの期限日が設定されていません"
