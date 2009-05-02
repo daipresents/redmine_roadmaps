@@ -3,7 +3,7 @@ require 'date'
 class RoadmapsLogic
 
   def self.get_versions(project_id)
-
+    
     results = []
     
     versions = Version.find(:all, :conditions => ["project_id = ?", project_id])
@@ -79,6 +79,9 @@ class RoadmapsLogic
       RAILS_DEFAULT_LOGGER.debug "set passed hours"
       vo.passed_hours = size_round(get_passed_hours(version.id), 2)
       RAILS_DEFAULT_LOGGER.debug "passed hours = #{vo.passed_hours.to_s}"
+
+      RAILS_DEFAULT_LOGGER.debug "set assigned user"
+      vo.assigned_users = get_assigned_users(version.id)
       
       results.push(vo)
       
@@ -88,6 +91,7 @@ class RoadmapsLogic
     
   end
 
+  private
   def self.get_closed_num(version_id, is_closed)
     sutatus = IssueStatus.find(:all, :conditions => ["is_closed = ?", is_closed])
     num = 0
@@ -97,6 +101,7 @@ class RoadmapsLogic
     return num
   end
 
+  private
   def self.get_start_date(version_id)
     Issue.find_by_sql(["select start_date from issues where fixed_version_id = :version_id order by start_date asc limit 0, 1",
           {:version_id => version_id}]).each do |field|
@@ -106,6 +111,7 @@ class RoadmapsLogic
     return nil
   end
 
+  private
   def self.get_due_date(version_id)
     Issue.find_by_sql(["select due_date from issues where fixed_version_id = :version_id order by due_date desc limit 0, 1",
           {:version_id => version_id}]).each do |field|
@@ -114,7 +120,8 @@ class RoadmapsLogic
 
     return nil
   end
-  
+
+  private
   def self.get_all_done_ratio(version_id)
     sum = 0.0
     
@@ -137,6 +144,7 @@ class RoadmapsLogic
     
   end
 
+  private
   def self.get_estimated_hours(version_id)
     Issue.find_by_sql(
         ["select sum(estimated_hours) as sum from issues where fixed_version_id = :version_id",
@@ -147,6 +155,7 @@ class RoadmapsLogic
     return 0
   end
 
+  private
   def self.get_passed_hours(version_id)
     passed_hours = 0.0
     Issue.find(:all, :conditions => ["fixed_version_id = ?", version_id]).each do |issue|
@@ -161,6 +170,7 @@ class RoadmapsLogic
     return passed_hours
   end
   
+  private
   def self.get_late(due_date)
     if due_date
       return (due_date - Date::today).to_i
@@ -169,10 +179,18 @@ class RoadmapsLogic
     return 0
   end
 
+  private
   def self.size_round(num, size)
     RAILS_DEFAULT_LOGGER.debug "num = #{num.to_s}"
     
     num = num * (10 ** size)
     return num.round / (10.0 ** size)
+  end
+
+  private
+  def self.get_assigned_users(version_id)
+    return Issue.find_by_sql(
+      ["select lastname, count(*) as count from issues, users where issues.assigned_to_id = users.id and fixed_version_id = :version_id group by assigned_to_id order by count desc",
+        {:version_id => version_id}])
   end
 end

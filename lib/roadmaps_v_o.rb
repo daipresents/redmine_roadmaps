@@ -27,9 +27,10 @@ class RoadmapsVO
     @due_date = nil
     @late = 0
 
+    @assigned_users = nil
   end
 
   attr_accessor :version_id, :project_identifier, :project_name, :name, :description, :effective_date, :ticket_num, :finish_num, :unfinish_num,
     :finish_percentage, :unfinish_percentage, :done_ratio, :estimated_hours, :passed_hours,
-    :start_date, :due_date, :late
+    :start_date, :due_date, :late, :assigned_users
 end

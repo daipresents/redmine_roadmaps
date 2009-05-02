@@ -23,53 +23,65 @@
     </table>
     <p class="pourcent"><%= vo.finish_percentage %>%</p>
 
-    <p><%= vo.description %></p>
-    <p>
-      <a href="/projects/<%= vo.project_identifier %>/issues?fixed_version_id=<%= vo.id %>&amp;set_filter=1&amp;status_id=c"><%= vo.finish_num %></a>
-      <%= l(:finished) %>(<%= vo.finish_percentage %>%),&#160;
-      <a href="/projects/<%= vo.project_identifier %>/issues?fixed_version_id=<%= vo.id %>&amp;set_filter=1&amp;status_id=o"><%= vo.unfinish_num %></a>
-      <%= l(:unfinished) %>(<%= vo.unfinish_percentage %>%),&#160;
-      <%= l(:estimated_hours) %>:<span class="hours hours-int"><%= vo.estimated_hours %></span> <%= l(:hours) %>,&#160;
-      <%
-        hours_string = vo.passed_hours
-        if vo.estimated_hours <= vo.passed_hours
-          hours_string = "<strong style=\"color:red;\">#{vo.passed_hours}</strong>"
-        end
-      %>
-      <%= l(:passed_hours) %>:<%=hours_string%> <%= l(:hours) %>
-    </p>
-    <p>
-      <%
-        date_string = ""
-        if vo.start_date == nil && vo.due_date == nil
-          date_string = l(:no_date)
-        elsif vo.start_date == nil
-          date_string = "<strong style=\"color:red;\">#{l(:no_start_date)}</strong>~#{vo.due_date.to_s}"
-        elsif vo.due_date == nil
-          date_string =  "#{vo.start_date.to_s}~<strong style=\"color:red;\">#{l(:no_due_date)}</strong>"
-        else
-          date_string = "#{vo.start_date.to_s}~#{vo.due_date.to_s}"
-        end
-      %>
-      <%=l(:actual_date)%>:<%=date_string%>,&#160;
-      <%
-        late_string = l(:days_to_go, vo.late)
-        if vo.late < 0
-          late_string = "<strong style=\"color:red;\">#{l(:late, vo.late.abs)}</strong>"
-        end
-      %>
-      <%=late_string%>,&#160;
-     <%
-        effective_date_string = ""
-        if vo.effective_date == nil
-          effective_date_string = "<strong style=\"color:red;\">#{l(:no_version_effective_date)}</strong>"
-        elsif vo.effective_date < Date::today
-         effective_date_string = "<strong style=\"color:red;\">#{vo.effective_date.to_s}</strong>"
-        else
-          effective_date_string = vo.effective_date.to_s
-        end
-      %>
-      <%=l(:version_effective_date)%>:<%=effective_date_string%>
-    </p>
+    <table class="list issues">
+      <tr>
+        <th rowspan="2"><%=l(:descripton)%></th>
+        <td rowspan="2"><%= vo.description %></td>
+        <th rowspan="2"><%=l(:assigned_users)%></th>
+        <td rowspan="2">
+          <% vo.assigned_users.each do |user| %>
+            <%=user.lastname%>(<%=user.count%>)<br />
+          <% end %>
+        </td>
+        <th><%=l(:ticket_status)%></th>
+        <td>
+          <a href="/projects/<%= vo.project_identifier %>/issues?fixed_version_id=<%= vo.version_id %>&amp;set_filter=1&amp;status_id=c"><%= vo.finish_num %></a>
+          <%= l(:finished) %>(<%= vo.finish_percentage %>%),&#160;
+          <a href="/projects/<%= vo.project_identifier %>/issues?fixed_version_id=<%= vo.version_id %>&amp;set_filter=1&amp;status_id=o"><%= vo.unfinish_num %></a>
+          <%= l(:unfinished) %>(<%= vo.unfinish_percentage %>%)
+        </td>
+        <th><%=l(:man_hours)%></th>
+        <td>
+          <%= l(:estimated_hours) %>:<span class="hours hours-int"><%= vo.estimated_hours %></span> <%= l(:hours) %>,&#160;
+          <%= l(:passed_hours) %>:
+          <% if vo.estimated_hours <= vo.passed_hours %>
+            <strong style="color:red;"><%=vo.passed_hours%></strong>
+          <% else %>
+            <%=vo.passed_hours%>
+          <% end %>
+          <%= l(:hours) %>
+        </td>
+      </tr>
+      <tr>
+        <th><%=l(:version_effective_date)%></th>
+        <td>
+          <% if vo.effective_date == nil %>
+            <strong style="color:red;"><%=l(:no_version_effective_date)%></strong>
+          <% elsif vo.effective_date < Date::today %>
+            <strong style="color:red;"><%=vo.effective_date.to_s%></strong>
+          <% else %>
+            <%=vo.effective_date.to_s%>
+          <% end %>
+        </td>
+        <th><%=l(:actual_date)%></th>
+        <td>
+          <% if vo.start_date == nil && vo.due_date == nil %>
+            <strong style="color:red;"><%=l(:no_date)%></strong>
+          <% elsif vo.start_date == nil %>
+            <strong style="color:red;"><%=l(:no_start_date)%></strong>~<%=vo.due_date.to_s%>
+          <% elsif vo.due_date == nil %>
+            <%=vo.start_date.to_s%>~<strong style="color:red;"><%=l(:no_due_date)%></strong>
+          <% else %>
+            <%=vo.start_date.to_s%>~<%=vo.due_date.to_s%>
+          <% end %>
+          ,&#160;
+          <% if vo.late < 0 %>
+            <strong style="color:red;"><%=l(:late, vo.late.abs)%></strong>
+          <% else %>
+            <%= l(:days_to_go, vo.late) %>
+          <% end %>
+        </td>
+      </tr>
+    </table>
   <% end %>
 </div>
