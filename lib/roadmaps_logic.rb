@@ -103,7 +103,9 @@ class RoadmapsLogic
 
   private
   def self.get_start_date(version_id)
-    Issue.find_by_sql(["select start_date from issues where fixed_version_id = :version_id order by start_date asc limit 0, 1",
+    Issue.find_by_sql([
+        "select start_date from issues
+          where fixed_version_id = :version_id order by start_date asc limit 0, 1",
           {:version_id => version_id}]).each do |field|
             return field.start_date
           end
@@ -113,7 +115,9 @@ class RoadmapsLogic
 
   private
   def self.get_due_date(version_id)
-    Issue.find_by_sql(["select due_date from issues where fixed_version_id = :version_id order by due_date desc limit 0, 1",
+    Issue.find_by_sql([
+        "select due_date from issues
+          where fixed_version_id = :version_id order by due_date desc limit 0, 1",
           {:version_id => version_id}]).each do |field|
             return field.due_date
           end
@@ -190,7 +194,10 @@ class RoadmapsLogic
   private
   def self.get_assigned_users(version_id)
     return Issue.find_by_sql(
-      ["select lastname, count(*) as count from issues, users where issues.assigned_to_id = users.id and fixed_version_id = :version_id group by assigned_to_id order by count desc",
+      ["select users.id, lastname, count(*) as count from issues, users
+        where issues.assigned_to_id = users.id and
+          fixed_version_id = :version_id
+          group by assigned_to_id order by count desc",
         {:version_id => version_id}])
   end
 end

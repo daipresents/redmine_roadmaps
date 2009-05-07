@@ -30,7 +30,8 @@
         <th rowspan="2"><%=l(:assigned_users)%></th>
         <td rowspan="2">
           <% vo.assigned_users.each do |user| %>
-            <%=user.lastname%>(<%=user.count%>)<br />
+            <%= link_to user.lastname, {:controller => 'account', :action => 'show', :id => user.id} %>
+            (<%=user.count%>)<br />
           <% end %>
         </td>
         <th><%=l(:ticket_status)%></th>
