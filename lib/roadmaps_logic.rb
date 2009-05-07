@@ -93,35 +93,45 @@ class RoadmapsLogic
 
   private
   def self.get_closed_num(version_id, is_closed)
-    sutatus = IssueStatus.find(:all, :conditions => ["is_closed = ?", is_closed])
+    statuses = IssueStatus.find(:all, :conditions => ["is_closed = ?", is_closed])
     num = 0
-    sutatus.each do |state|
-      num += Issue.count(:all, :conditions => ["fixed_version_id = ? and status_id =?", version_id, state.id])
+    unless statuses.nil?
+      statuses.each do |status|
+        num += Issue.count(:all, :conditions => ["fixed_version_id = ? and status_id =?", version_id, status.id])
+      end
     end
     return num
   end
 
   private
   def self.get_start_date(version_id)
-    Issue.find_by_sql([
-        "select start_date from issues
-          where fixed_version_id = :version_id order by start_date asc limit 0, 1",
-          {:version_id => version_id}]).each do |field|
-            return field.start_date
-          end
+    issues = Issue.find_by_sql([
+          "select start_date from issues
+            where fixed_version_id = :version_id order by start_date asc limit 0, 1",
+            {:version_id => version_id}])
+
+    unless issues.nil?
+      issues.each do |field|
+        return field.start_date
+      end
+    end
           
     return nil
   end
 
   private
   def self.get_due_date(version_id)
-    Issue.find_by_sql([
-        "select due_date from issues
-          where fixed_version_id = :version_id order by due_date desc limit 0, 1",
-          {:version_id => version_id}]).each do |field|
-            return field.due_date
-          end
+    issues = Issue.find_by_sql([
+          "select due_date from issues
+            where fixed_version_id = :version_id order by due_date desc limit 0, 1",
+            {:version_id => version_id}])
 
+    unless issues.nil?
+      issues.each do |field|
+        return field.due_date
+      end
+    end
+    
     return nil
   end
 
@@ -129,12 +139,16 @@ class RoadmapsLogic
   def self.get_all_done_ratio(version_id)
     sum = 0.0
     
-    Issue.find_by_sql(
+    issues = Issue.find_by_sql(
       ["select sum(done_ratio) as sum from issues where fixed_version_id = :version_id",
-        {:version_id => version_id}]).each do |field|
-          sum = field.sum.to_f
-        end
+        {:version_id => version_id}])
 
+    unless issues.nil?
+      issues.each do |field|
+        sum = field.sum.to_f
+      end
+    end
+    
     RAILS_DEFAULT_LOGGER.debug "sum = #{sum.to_s}"
     
     count = Issue.count(:all, :conditions => ["fixed_version_id = ?", version_id])
@@ -150,27 +164,37 @@ class RoadmapsLogic
 
   private
   def self.get_estimated_hours(version_id)
-    Issue.find_by_sql(
-        ["select sum(estimated_hours) as sum from issues where fixed_version_id = :version_id",
-          {:version_id => version_id}]).each do |field|
-            return field.sum.to_f
-          end
+    issues = Issue.find_by_sql(
+          ["select sum(estimated_hours) as sum from issues where fixed_version_id = :version_id",
+            {:version_id => version_id}])
 
+    unless issues.nil?
+      issues.each do |field|
+        return field.sum.to_f
+      end
+    end
+    
     return 0
   end
 
   private
   def self.get_passed_hours(version_id)
     passed_hours = 0.0
-    Issue.find(:all, :conditions => ["fixed_version_id = ?", version_id]).each do |issue|
-      TimeEntry.find_by_sql(
-        ["select sum(hours) as sum from time_entries where issue_id = :issue_id",
-          {:issue_id => issue.id}]).each do |field|
-            passed_hours += field.sum.to_f
+    issues = Issue.find(:all, :conditions => ["fixed_version_id = ?", version_id])
+    unless issues.nil?
+      issues.each do |issue|
+        time_entries = TimeEntry.find_by_sql(
+            ["select sum(hours) as sum from time_entries where issue_id = :issue_id",
+              {:issue_id => issue.id}])
+        unless time_entries.nil?
+          time_entries.each do |field|
+              passed_hours += field.sum.to_f
             break
           end
+        end
+      end
     end
-
+    
     return passed_hours
   end
   
