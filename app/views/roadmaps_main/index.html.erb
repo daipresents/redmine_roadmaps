@@ -6,27 +6,29 @@
     <h3 class="icon22 icon22-package">
       <%= link_to vo.name, {:controller => 'versions', :action => 'show', :id => vo.version_id} %>
     </h3>
-    
-    <table class="progress" style="width: 40em;">
-      <tr>
-        <% if vo.finish_percentage == 0 &&  vo.unfinish_percentage == 0 %>
-          <td class="todo" style="width: 100%;"></td>
-        <% elsif vo.unfinish_percentage == 100 %>
-          <td class="todo" style="width:100%;"></td>
-        <% elsif vo.unfinish_percentage == 100 %>
-          <td class="closed" style="width:100%;"></td>
-        <% else %>
-          <td class="closed" style="width: <%=vo.finish_percentage%>%;"></td>
-          <td class="todo" style="width:<%=vo.unfinish_percentage%>%;"></td>
-        <% end %>
-      </tr>
-    </table>
-    <p class="pourcent"><%= vo.finish_percentage %>%</p>
 
+    <div style="padding-bottom:5px;text-align:center;">
+      <table class="progress" style="width:90%;height:2em;">
+        <tr>
+          <% if vo.finish_percentage == 0 &&  vo.unfinish_percentage == 0 %>
+            <td class="todo" style="width: 100%;"></td>
+          <% elsif vo.unfinish_percentage == 100 %>
+            <td class="todo" style="width:100%;"></td>
+          <% elsif vo.unfinish_percentage == 100 %>
+            <td class="closed" style="width:100%;"></td>
+          <% else %>
+            <td class="closed" style="width: <%=vo.finish_percentage%>%;"></td>
+            <td class="todo" style="width:<%=vo.unfinish_percentage%>%;"></td>
+          <% end %>
+        </tr>
+      </table>
+      <div style="font-size:1.8em;"><%= vo.finish_percentage %>%</div>
+    </div>
+    
     <table class="list issues">
       <tr>
         <th rowspan="2"><%=l(:descripton)%></th>
-        <td rowspan="2"><%= vo.description %></td>
+        <td rowspan="2" style="width:25%"><%= vo.description %></td>
         <th rowspan="2"><%=l(:assigned_users)%></th>
         <td rowspan="2">
           <% vo.assigned_users.each do |user| %>
@@ -84,5 +86,7 @@
         </td>
       </tr>
     </table>
+
+    <div style="padding:15px 15px"></div>
   <% end %>
 </div>
