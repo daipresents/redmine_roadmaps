@@ -12,7 +12,7 @@ class RoadmapsMainController < ApplicationController
     # 親プロジェクト
     logger.debug("get versions from parent project.")
     versions = RoadmapsLogic.get_versions(@project.id)
-    if versions
+    unless versions.nil?
       @results.concat(versions)
     end
 
@@ -20,10 +20,13 @@ class RoadmapsMainController < ApplicationController
 
     # 子プロジェクト
     logger.debug("get versions from child project.")
-    Project.find(:all, :conditions => ["parent_id = ?", @project.id]).each do |child_project|
-      versions = RoadmapsLogic.get_versions(child_project.id)
-      if versions
-        @results.concat(versions)
+    projects = Project.find(:all, :conditions => ["parent_id = ?", @project.id])
+    unless projects.nil?
+      projects.each do |child_project|
+        versions = RoadmapsLogic.get_versions(child_project.id)
+        if versions
+          @results.concat(versions)
+        end
       end
     end
 

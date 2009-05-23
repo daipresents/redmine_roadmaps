@@ -1,5 +1,6 @@
 # Japanese strings go here
 roadmaps_name: "ロードマップス"
+edit: "編集"
 late: "%d日遅れ"
 days_to_go: "残り%d日"
 version_effective_date: "バージョンの期限日"

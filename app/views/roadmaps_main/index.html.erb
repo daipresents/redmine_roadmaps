@@ -5,10 +5,13 @@
   <% @results.each do |vo| %>
     <h3 class="icon22 icon22-package">
       <%= link_to vo.name, {:controller => 'versions', :action => 'show', :id => vo.version_id} %>
+      <span style="font-size:0.7em;">
+        <%= link_to l(:edit), {:controller => 'versions', :action => 'edit', :id => vo.version_id} %>
+      </span>
     </h3>
 
     <div style="padding-bottom:5px;text-align:center;">
-      <table class="progress" style="width:90%;height:2em;">
+      <table class="progress" style="width:80%;height:2em;">
         <tr>
           <% if vo.finish_percentage == 0 &&  vo.unfinish_percentage == 0 %>
             <td class="todo" style="width: 100%;"></td>
@@ -22,7 +25,14 @@
           <% end %>
         </tr>
       </table>
-      <div style="font-size:1.8em;"><%= vo.finish_percentage %>%</div>
+      <div style="font-size:1.8em;">
+        <%= vo.finish_percentage %>%&nbsp;&nbsp;&nbsp;
+        <% if vo.late < 0 %>
+          <strong style="color:red;"><%=l(:late, vo.late.abs)%></strong>
+        <% else %>
+          <%= l(:days_to_go, vo.late) %>
+        <% end %>
+      </div>
     </div>
     
     <table class="list issues">
@@ -76,12 +86,6 @@
             <%=vo.start_date.to_s%>~<strong style="color:red;"><%=l(:no_due_date)%></strong>
           <% else %>
             <%=vo.start_date.to_s%>~<%=vo.due_date.to_s%>
-          <% end %>
-          ,&#160;
-          <% if vo.late < 0 %>
-            <strong style="color:red;"><%=l(:late, vo.late.abs)%></strong>
-          <% else %>
-            <%= l(:days_to_go, vo.late) %>
           <% end %>
         </td>
       </tr>

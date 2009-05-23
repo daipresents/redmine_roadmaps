@@ -7,6 +7,10 @@ class RoadmapsLogic
     results = []
     
     versions = Version.find(:all, :conditions => ["project_id = ?", project_id])
+    if versions.nil?
+      return results
+    end
+
     versions.each do |version|
 
       finish_num = get_closed_num(version.id, 1)
@@ -21,8 +25,10 @@ class RoadmapsLogic
       vo = RoadmapsVO.new
 
       project = Project.find(:first, :conditions => ["id = ?", version.project_id])
-      vo.project_identifier = project.identifier
-      vo.project_name = project.name
+      unless project.nil?
+        vo.project_identifier = project.identifier
+        vo.project_name = project.name
+      end
       
       RAILS_DEFAULT_LOGGER.debug "set version information"
       vo.version_id = version.id
@@ -66,7 +72,7 @@ class RoadmapsLogic
       RAILS_DEFAULT_LOGGER.debug "due date = #{vo.due_date.class.to_s}"
       
       RAILS_DEFAULT_LOGGER.debug "set late"
-      vo.late = get_late(vo.due_date)
+      vo.late = get_late(vo.effective_date)
 
       RAILS_DEFAULT_LOGGER.debug "set done ratio"
       vo.done_ratio = get_all_done_ratio(version.id)
@@ -87,7 +93,9 @@ class RoadmapsLogic
       
     end
 
-    return results
+    return results.sort{|aa, bb|
+      aa.name <=> bb.name
+    }
     
   end
 

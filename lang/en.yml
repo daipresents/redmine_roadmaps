@@ -1,5 +1,6 @@
 # English strings go here
 roadmaps_name: "Roadmaps"
+edit: "edit"
 late: "%d days late"
 days_to_go: "%d days to go"
 version_effective_date: "version's effective date"
