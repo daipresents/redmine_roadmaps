@@ -1,4 +1,5 @@
 require 'date'
+require 'common_logic'
 
 class RoadmapsLogic
 
@@ -13,15 +14,8 @@ class RoadmapsLogic
 
     versions.each do |version|
 
-      finish_num = get_closed_num(version.id, 1)
-      unfinish_num = get_closed_num(version.id, 0)
+      next unless CommonLogic.is_valid_version(version.id, version.effective_date)
 
-      RAILS_DEFAULT_LOGGER.debug "finish_num = #{finish_num}"
-      RAILS_DEFAULT_LOGGER.debug "unfinish_num = #{unfinish_num}"
-
-      # closed version
-      next if finish_num > 0 && unfinish_num <= 0
-      
       vo = RoadmapsVO.new
 
       project = Project.find(:first, :conditions => ["id = ?", version.project_id])
@@ -37,17 +31,17 @@ class RoadmapsLogic
       vo.effective_date = version.effective_date
       
       RAILS_DEFAULT_LOGGER.debug "set closed num"
-      vo.finish_num = finish_num
+      vo.finish_num = CommonLogic.get_closed_num(version.id, 1)
 
       RAILS_DEFAULT_LOGGER.debug "set unfinish_num"
-      vo.unfinish_num = unfinish_num
+      vo.unfinish_num = CommonLogic.get_closed_num(version.id, 0)
 
       RAILS_DEFAULT_LOGGER.debug "set ticket num"
       vo.ticket_num = vo.finish_num + vo.unfinish_num
 
       RAILS_DEFAULT_LOGGER.debug "set finish percentage"
       if vo.ticket_num != 0
-        vo.finish_percentage = size_round(vo.finish_num.to_f / vo.ticket_num.to_f, 2) * 100
+        vo.finish_percentage = CommonLogic.size_round(vo.finish_num.to_f / vo.ticket_num.to_f, 2) * 100
       else
         vo.finish_percentage = 0
       end
@@ -55,7 +49,7 @@ class RoadmapsLogic
 
       RAILS_DEFAULT_LOGGER.debug "set unfinish percentage"
       if vo.ticket_num != 0
-        vo.unfinish_percentage = size_round(vo.unfinish_num.to_f / vo.ticket_num.to_f, 2) * 100
+        vo.unfinish_percentage = CommonLogic.size_round(vo.unfinish_num.to_f / vo.ticket_num.to_f, 2) * 100
       else
         vo.unfinish_percentage = 0
       end
@@ -79,11 +73,11 @@ class RoadmapsLogic
       RAILS_DEFAULT_LOGGER.debug "done ratio = #{vo.done_ratio.to_s}"
 
       RAILS_DEFAULT_LOGGER.debug "set estimated hours"
-      vo.estimated_hours = size_round(get_estimated_hours(version.id), 2)
+      vo.estimated_hours = CommonLogic.size_round(get_estimated_hours(version.id), 2)
       RAILS_DEFAULT_LOGGER.debug "estimated hours = #{vo.estimated_hours.to_s}"
 
       RAILS_DEFAULT_LOGGER.debug "set passed hours"
-      vo.passed_hours = size_round(get_passed_hours(version.id), 2)
+      vo.passed_hours = CommonLogic.size_round(get_passed_hours(version.id), 2)
       RAILS_DEFAULT_LOGGER.debug "passed hours = #{vo.passed_hours.to_s}"
 
       RAILS_DEFAULT_LOGGER.debug "set assigned user"
@@ -97,18 +91,6 @@ class RoadmapsLogic
       aa.name <=> bb.name
     }
     
-  end
-
-  private
-  def self.get_closed_num(version_id, is_closed)
-    statuses = IssueStatus.find(:all, :conditions => ["is_closed = ?", is_closed])
-    num = 0
-    unless statuses.nil?
-      statuses.each do |status|
-        num += Issue.count(:all, :conditions => ["fixed_version_id = ? and status_id =?", version_id, status.id])
-      end
-    end
-    return num
   end
 
   private
@@ -163,7 +145,7 @@ class RoadmapsLogic
     RAILS_DEFAULT_LOGGER.debug "count = #{count.to_s}"
     
     if count.to_i != 0
-      return size_round(sum / count, 2)
+      return CommonLogic.size_round(sum / count, 2)
     end
 
     return 0
@@ -213,14 +195,6 @@ class RoadmapsLogic
     end
 
     return 0
-  end
-
-  private
-  def self.size_round(num, size)
-    RAILS_DEFAULT_LOGGER.debug "num = #{num.to_s}"
-    
-    num = num * (10 ** size)
-    return num.round / (10.0 ** size)
   end
 
   private

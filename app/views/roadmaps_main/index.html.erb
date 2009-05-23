@@ -11,7 +11,7 @@
     </h3>
 
     <div style="padding-bottom:5px;text-align:center;">
-      <table class="progress" style="width:80%;height:2em;">
+      <table class="progress" style="width:70%;height:2em;">
         <tr>
           <% if vo.finish_percentage == 0 &&  vo.unfinish_percentage == 0 %>
             <td class="todo" style="width: 100%;"></td>
@@ -55,7 +55,13 @@
         </td>
         <th><%=l(:man_hours)%></th>
         <td>
-          <%= l(:estimated_hours) %>:<span class="hours hours-int"><%= vo.estimated_hours %></span> <%= l(:hours) %>,&#160;
+          <%= l(:estimated_hours) %>:
+          <% if vo.estimated_hours == 0.0 %>
+            <strong style="color:red;"><%= vo.estimated_hours %></strong>
+          <% else %>
+            <%= vo.estimated_hours %>
+          <% end %>
+           <%= l(:hours) %>,&#160;
           <%= l(:passed_hours) %>:
           <% if vo.estimated_hours <= vo.passed_hours %>
             <strong style="color:red;"><%=vo.passed_hours%></strong>
