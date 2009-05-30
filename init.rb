@@ -8,7 +8,7 @@ Redmine::Plugin.register :redmine_roadmaps do
   author_url 'http://daipresents.com/weblog/fujihalab/'
 
   requires_redmine :version_or_higher => '0.8.0'
-  version '0.4.1'
+  version '0.4.2'
 
   #permission :roadmaps, {:roadmaps_main => [:index]}, :public => true
   #permission :view_roadmaps, :roadmaps_main => :index

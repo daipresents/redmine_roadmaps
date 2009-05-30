@@ -30,6 +30,10 @@ class RoadmapsMainController < ApplicationController
       end
     end
 
+    @results = @results.sort{|aa, bb|
+      aa.name <=> bb.name
+    }
+
     logger.debug("child versions results = #{@results.size.to_s}")
     
   end

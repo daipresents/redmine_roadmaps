@@ -87,9 +87,7 @@ class RoadmapsLogic
       
     end
 
-    return results.sort{|aa, bb|
-      aa.name <=> bb.name
-    }
+    return results
     
   end
 
@@ -97,7 +95,7 @@ class RoadmapsLogic
   def self.get_start_date(version_id)
     issues = Issue.find_by_sql([
           "select start_date from issues
-            where fixed_version_id = :version_id order by start_date asc limit 0, 1",
+            where fixed_version_id = :version_id and start_date is not NULL order by start_date asc limit 0, 1",
             {:version_id => version_id}])
 
     unless issues.nil?
