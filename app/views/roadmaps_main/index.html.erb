@@ -4,6 +4,7 @@
 
   <% @results.each do |vo| %>
     <h3 class="icon22 icon22-package">
+      <%= link_to vo.project_name, {:controller => 'projects', :action => 'show', :id => vo.project_identifier} %> - 
       <%= link_to vo.name, {:controller => 'versions', :action => 'show', :id => vo.version_id} %>
       <span style="font-size:0.7em;">
         <%= link_to l(:edit), {:controller => 'versions', :action => 'edit', :id => vo.version_id} %>
