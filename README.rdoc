@@ -19,7 +19,7 @@ Versionの期限日をチケットの期限日が過ぎていれば、遅延っ�
 == Note
 - Recent Version:0.4.2
 - This plugin works only Redmine 0.9.0 or higher. 
-- This plugin is tested WEBRick, FF3.5.8, MySQL5
+- This plugin is tested Redmine 0.8.0, 0.8.2, 0.8.4, WEBRick, FF3.5.8, MySQL5
 
 == License
 This plugin is licensed under GNU General Public License version 3.
