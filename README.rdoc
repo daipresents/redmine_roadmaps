@@ -1,3 +1,26 @@
-= roadmaps
+= redmine_roadmaps
+プロジェクトに紐付くVersionを1階層まで表示するプラグイン。
 
-Description goes here
+== Details
+このプラグインを設定したプロジェクトに子プロジェクトがある場合は、それらのVersionも表示する。
+また、Versionには開始日がないので、実績としてチケットの一番前の開始日を開始日として、
+チケットの一番あとの期限日を期限日として考えている。
+Versionの期限日をチケットの期限日が過ぎていれば、遅延ってことになる。
+
+== Plugin Instration
+- Download redmine_roadmaps.
+- Unpack and move into vendor/plugins.
+- Rename the plugin directory to redmine_roadmaps.
+- Restart Redmine.
+- Login and configure the plugin (Administration > Roles and permissions > Permissions report)
+- Configure the project (Project > Settings > Modules).
+- Click to 'Roadmaps' menu.
+
+== Note
+- Recent Version:0.4.2
+- This plugin works only Redmine 0.9.0 or higher. 
+- This plugin is tested WEBRick, FF3.5.8, MySQL5
+
+== License
+This plugin is licensed under GNU General Public License version 3.
+
