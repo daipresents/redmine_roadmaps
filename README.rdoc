@@ -11,13 +11,16 @@ Versionの期限日をチケットの期限日が過ぎていれば、遅延っ�
 - Download redmine_roadmaps.
 - Unpack and move into vendor/plugins.
 - Rename the plugin directory to redmine_roadmaps.
+-- You can also download from Github directly.
+  cd ${RAILS_ROOT}
+  git clone git://github.com/daipresents/redmine_roadmaps.git vendor/plugins/redmine_roadmaps
 - Restart Redmine.
 - Login and configure the plugin (Administration > Roles and permissions > Permissions report)
 - Configure the project (Project > Settings > Modules).
 - Click to 'Roadmaps' menu.
 
 == Note
-- This plugin works only Redmine 0.9.0 or higher. 
+- I tested this plugin on Redmine 0.9.6 + MySQL5.5.
 
 == License
 This plugin is licensed under GNU General Public License version 3.
