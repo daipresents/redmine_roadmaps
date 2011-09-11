@@ -29,9 +29,9 @@
       <div style="font-size:1.8em;">
         <%= vo.finish_percentage %>%&nbsp;&nbsp;&nbsp;
         <% if vo.late < 0 %>
-          <strong style="color:red;"><%=l(:late, vo.late.abs)%></strong>
+          <strong style="color:red;"><%=l(:late, :days => vo.late.abs)%></strong>
         <% else %>
-          <%= l(:days_to_go, vo.late) %>
+          <%= l(:days_to_go, :days => vo.late) %>
         <% end %>
       </div>
     </div>
