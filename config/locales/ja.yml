@@ -1,8 +1,8 @@
 ja:
     roadmaps_name: "ロードマップス"
     edit: "編集"
-    late: "%d日遅れ"
-    days_to_go: "残り%d日"
+    late: "%{days}日遅れ"
+    days_to_go: "残り%{days}日"
     version_effective_date: "バージョンの期限日"
     finished: "終了"
     unfinished: "未完了"
