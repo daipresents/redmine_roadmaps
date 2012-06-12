@@ -49,9 +49,9 @@
         </td>
         <th><%=l(:ticket_status)%></th>
         <td>
-          <%= link_to vo.finish_num, {:controller => 'issues', :action => 'index', :project_id => vo.project_identifier, :fixed_version_id => vo.version_id, :set_filter => '1', :status_id => 'c' } %>
+          <%= link_to vo.finish_num, project_issues_path(vo.project_identifier, :status_id => 'c', :fixed_version_id => vo.version_id, :set_filter => '1') %>
           <%= l(:finished) %>(<%= vo.finish_percentage %>%),&#160;
-          <%= link_to vo.unfinish_num, {:controller => 'projects', :action => 'index', :project_id => vo.project_identifier, :fixed_version_id => vo.version_id, :set_filter => '1', :status_id => 'o'} %>
+          <%= link_to vo.unfinish_num, project_issues_path(vo.project_identifier, :fixed_version_id => vo.version_id, :set_filter => '1', :status_id => 'o') %>
           <%= l(:unfinished) %>(<%= vo.unfinish_percentage %>%)
         </td>
         <th><%=l(:man_hours)%></th>
