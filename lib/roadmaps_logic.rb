@@ -24,63 +24,63 @@ class RoadmapsLogic
         vo.project_name = project.name
       end
       
-      RAILS_DEFAULT_LOGGER.debug "set version information"
+      Rails.logger.debug "set version information"
       vo.version_id = version.id
       vo.name = version.name
       vo.description = version.description
       vo.effective_date = version.effective_date
       
-      RAILS_DEFAULT_LOGGER.debug "set closed num"
+      Rails.logger.debug "set closed num"
       vo.finish_num = CommonLogic.get_closed_num(version.id, 1)
 
-      RAILS_DEFAULT_LOGGER.debug "set unfinish_num"
+      Rails.logger.debug "set unfinish_num"
       vo.unfinish_num = CommonLogic.get_closed_num(version.id, 0)
 
-      RAILS_DEFAULT_LOGGER.debug "set ticket num"
+      Rails.logger.debug "set ticket num"
       vo.ticket_num = vo.finish_num + vo.unfinish_num
 
-      RAILS_DEFAULT_LOGGER.debug "set finish percentage"
+      Rails.logger.debug "set finish percentage"
       if vo.ticket_num != 0
         vo.finish_percentage = CommonLogic.size_round(vo.finish_num.to_f / vo.ticket_num.to_f, 2) * 100
       else
         vo.finish_percentage = 0
       end
-      RAILS_DEFAULT_LOGGER.debug "finish percentage = #{vo.finish_percentage.to_s}"
+      Rails.logger.debug "finish percentage = #{vo.finish_percentage.to_s}"
 
-      RAILS_DEFAULT_LOGGER.debug "set unfinish percentage"
+      Rails.logger.debug "set unfinish percentage"
       if vo.ticket_num != 0
         vo.unfinish_percentage = CommonLogic.size_round(vo.unfinish_num.to_f / vo.ticket_num.to_f, 2) * 100
       else
         vo.unfinish_percentage = 0
       end
-      RAILS_DEFAULT_LOGGER.debug "unfinish percentage = #{vo.unfinish_percentage.to_s}"
+      Rails.logger.debug "unfinish percentage = #{vo.unfinish_percentage.to_s}"
 
-      RAILS_DEFAULT_LOGGER.debug "set start date"
+      Rails.logger.debug "set start date"
       vo.start_date = get_start_date(version.id)
-      RAILS_DEFAULT_LOGGER.debug "start date = #{vo.start_date.to_s}"
-      RAILS_DEFAULT_LOGGER.debug "start date = #{vo.start_date.class.to_s}"
+      Rails.logger.debug "start date = #{vo.start_date.to_s}"
+      Rails.logger.debug "start date = #{vo.start_date.class.to_s}"
 
-      RAILS_DEFAULT_LOGGER.debug "set due date"
+      Rails.logger.debug "set due date"
       vo.due_date = get_due_date(version.id)
-      RAILS_DEFAULT_LOGGER.debug "due date = #{vo.due_date.to_s}"
-      RAILS_DEFAULT_LOGGER.debug "due date = #{vo.due_date.class.to_s}"
+      Rails.logger.debug "due date = #{vo.due_date.to_s}"
+      Rails.logger.debug "due date = #{vo.due_date.class.to_s}"
       
-      RAILS_DEFAULT_LOGGER.debug "set late"
+      Rails.logger.debug "set late"
       vo.late = get_late(vo.effective_date)
 
-      RAILS_DEFAULT_LOGGER.debug "set done ratio"
+      Rails.logger.debug "set done ratio"
       vo.done_ratio = get_all_done_ratio(version.id)
-      RAILS_DEFAULT_LOGGER.debug "done ratio = #{vo.done_ratio.to_s}"
+      Rails.logger.debug "done ratio = #{vo.done_ratio.to_s}"
 
-      RAILS_DEFAULT_LOGGER.debug "set estimated hours"
+      Rails.logger.debug "set estimated hours"
       vo.estimated_hours = CommonLogic.size_round(get_estimated_hours(version.id), 2)
-      RAILS_DEFAULT_LOGGER.debug "estimated hours = #{vo.estimated_hours.to_s}"
+      Rails.logger.debug "estimated hours = #{vo.estimated_hours.to_s}"
 
-      RAILS_DEFAULT_LOGGER.debug "set passed hours"
+      Rails.logger.debug "set passed hours"
       vo.passed_hours = CommonLogic.size_round(get_passed_hours(version.id), 2)
-      RAILS_DEFAULT_LOGGER.debug "passed hours = #{vo.passed_hours.to_s}"
+      Rails.logger.debug "passed hours = #{vo.passed_hours.to_s}"
 
-      RAILS_DEFAULT_LOGGER.debug "set assigned user"
+      Rails.logger.debug "set assigned user"
       vo.assigned_users = get_assigned_users(version.id)
       
       results.push(vo)
@@ -137,10 +137,10 @@ class RoadmapsLogic
       end
     end
     
-    RAILS_DEFAULT_LOGGER.debug "sum = #{sum.to_s}"
+    Rails.logger.debug "sum = #{sum.to_s}"
     
     count = Issue.count(:all, :conditions => ["fixed_version_id = ?", version_id])
-    RAILS_DEFAULT_LOGGER.debug "count = #{count.to_s}"
+    Rails.logger.debug "count = #{count.to_s}"
     
     if count.to_i != 0
       return CommonLogic.size_round(sum / count, 2)
