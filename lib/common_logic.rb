@@ -13,7 +13,7 @@ class CommonLogic
   end
 
   def self.size_round(num, size)
-    RAILS_DEFAULT_LOGGER.debug "round num = #{num.to_s}"
+    Rails.logger.debug "round num = #{num.to_s}"
 
     num = num * (10 ** size)
     return num.round / (10.0 ** size)
@@ -34,8 +34,8 @@ class CommonLogic
       finish_num = get_closed_num(version_id, 1)
       unfinish_num = get_closed_num(version_id, 0)
 
-      RAILS_DEFAULT_LOGGER.debug "finish_num = #{finish_num}"
-      RAILS_DEFAULT_LOGGER.debug "unfinish_num = #{unfinish_num}"
+      Rails.logger.debug "finish_num = #{finish_num}"
+      Rails.logger.debug "unfinish_num = #{unfinish_num}"
 
       # closed version
       unless effective_date.nil?
