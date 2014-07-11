@@ -1,6 +1,5 @@
 Rails.application.routes.draw do 
   resources :projects do
-    resources :roadmaps_main
+    resources :roadmaps_main, :only => :index
   end
-  resources :projects, :path => 'projects/:action', :only => [:index, :show]
 end
