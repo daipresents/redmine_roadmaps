@@ -41,7 +41,7 @@ class RoadmapsLogic
 
       Rails.logger.debug "set finish percentage"
       if vo.ticket_num != 0
-        vo.finish_percentage = CommonLogic.size_round(vo.finish_num.to_f / vo.ticket_num.to_f, 2) * 100
+        vo.finish_percentage = CommonLogic.size_round(vo.finish_num.to_f / vo.ticket_num.to_f  * 100, 2)
       else
         vo.finish_percentage = 0
       end
@@ -49,7 +49,7 @@ class RoadmapsLogic
 
       Rails.logger.debug "set unfinish percentage"
       if vo.ticket_num != 0
-        vo.unfinish_percentage = CommonLogic.size_round(vo.unfinish_num.to_f / vo.ticket_num.to_f, 2) * 100
+        vo.unfinish_percentage = CommonLogic.size_round(vo.unfinish_num.to_f / vo.ticket_num.to_f * 100, 2)
       else
         vo.unfinish_percentage = 0
       end
