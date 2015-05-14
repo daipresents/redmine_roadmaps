@@ -19,3 +19,4 @@ en:
     no_due_date: "due date is not setting"
     no_date: "start date and due date are not setting"
     no_version_effective_date: "version effective date is not setting"
+    no_version_start_date: "version start date is not setting"
