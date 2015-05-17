@@ -1,3 +1,5 @@
-ActionController::Routing::Routes.draw do |map|
-  map.connect "/roadmaps", :controller => "roadmaps_main", :action => "index", :conditions => { :method => :get}
+Rails.application.routes.draw do 
+  resources :projects do
+    resources :roadmaps_main, :only => :index
+  end
 end
